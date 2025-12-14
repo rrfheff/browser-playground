@@ -1,5 +1,6 @@
 import * as Babel from '@babel/standalone';
 import { rollup } from '@rollup/browser';
+import { extendCompileConfigWithDependencies } from './dependencies';
 import type { CompileResult, PlaygroundCompileConfig, PlaygroundPlugin, VirtualFileSystem } from './types';
 
 const defaultBabelPlugins: any[] = [];
@@ -30,7 +31,8 @@ export async function compileUserCode(
 export async function compileVirtualFiles(
   rawFiles: VirtualFileSystem,
   entryFile: string,
-  plugins: PlaygroundPlugin[] = []
+  plugins: PlaygroundPlugin[] = [],
+  options?: { dependencies?: string[] }
 ): Promise<CompileResult> {
   let files = normalizeVirtualFileSystem(rawFiles);
   let entry = normalizeVfsPath(entryFile);
@@ -56,7 +58,8 @@ export async function compileVirtualFiles(
     return { code: null, error: `Entry file not found after plugin transforms: "${entry}".` };
   }
 
-  const compileConfig = resolveCompileConfig(plugins, { files, entryFile: entry });
+  const compileConfigBase = resolveCompileConfig(plugins, { files, entryFile: entry });
+  const compileConfig = extendCompileConfigWithDependencies(compileConfigBase, options?.dependencies ?? []);
 
   let workingFiles: VirtualFileSystem = { ...files };
 

@@ -55,6 +55,18 @@ const setup = async (monacoNs: any) => {
       };
     }
   });
+
+  // `setupMonaco` is async but models are created earlier (beforeMount).
+  // Force existing `.vue` models to re-tokenize using the newly registered tokens provider.
+  const models: any[] = (monacoNs.editor.getModels?.() ?? []) as any[];
+  for (const model of models) {
+    try {
+      if (model?.getLanguageId?.() !== 'vue') continue;
+      monacoNs.editor.setModelLanguage(model, 'vue');
+    } catch {
+      // ignore
+    }
+  }
 };
 
 const registerVueLanguage = (monacoNs: any) => {
@@ -99,19 +111,21 @@ const scopeToGrammarJson = (scopeName: string): any | null => {
 };
 
 const mapScopesToMonacoToken = (scopes: string[]) => {
-  const scope = (scopes[scopes.length - 1] ?? '').toLowerCase();
-  if (!scope) return '';
+  const text = scopes.map((s) => s.toLowerCase()).join(' ');
+  if (!text) return '';
 
-  if (scope.includes('comment')) return 'comment';
-  if (scope.includes('string')) return 'string';
-  if (scope.includes('constant.numeric') || scope.includes('number')) return 'number';
-  if (scope.includes('keyword')) return 'keyword';
+  if (text.includes('comment')) return 'comment';
+  if (text.includes('string')) return 'string';
+  if (text.includes('constant.numeric') || text.includes('number')) return 'number';
+  if (text.includes('keyword')) return 'keyword';
 
-  if (scope.includes('entity.name.tag') || scope.includes('tag')) return 'tag';
-  if (scope.includes('entity.other.attribute-name') || scope.includes('attribute.name')) return 'attribute.name';
-  if (scope.includes('attribute.value')) return 'attribute.value';
+  // HTML / Vue template
+  if (text.includes('entity.name.tag') || text.includes('tag.html') || text.includes('meta.tag')) return 'tag';
+  if (text.includes('entity.other.attribute-name') || text.includes('attribute-name') || text.includes('attribute.name'))
+    return 'attribute.name';
+  if (text.includes('attribute.value')) return 'string';
 
-  if (scope.includes('punctuation')) return 'delimiter';
+  if (text.includes('punctuation')) return 'delimiter';
   return '';
 };
 

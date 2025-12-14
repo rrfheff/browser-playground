@@ -8,3 +8,4 @@ dist
 .pnpm-store
 *.log
 
+TEMP_*

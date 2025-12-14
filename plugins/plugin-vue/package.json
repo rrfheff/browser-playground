@@ -1,12 +1,12 @@
 {
-  "name": "@browser-playground/vue",
+  "name": "@browser-playground/plugin-vue",
   "version": "0.0.1",
   "description": "Vue runtime plugin for @browser-playground/core.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:rrfheff/browser-playground.git",
-    "directory": "packages/vue"
+    "directory": "plugins/plugin-vue"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "lint": "echo 'lint not configured for vue plugin'",
+    "lint": "echo 'lint not configured for plugin-vue'",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

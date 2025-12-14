@@ -1,12 +1,12 @@
 {
-  "name": "@browser-playground/plugins",
+  "name": "@browser-playground/plugin-controller",
   "version": "0.0.1",
-  "description": "Extension hooks for the browser playground.",
+  "description": "Plugin controller package for @browser-playground/core (example plugins).",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:rrfheff/browser-playground.git",
-    "directory": "packages/plugins"
+    "directory": "plugins/plugin-controller"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "lint": "echo 'lint not configured for plugins'",
+    "lint": "echo 'lint not configured for plugin-controller'",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

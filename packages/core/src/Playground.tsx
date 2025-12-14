@@ -9,6 +9,7 @@ export const Playground: React.FC<PlaygroundProps> = ({
   initialFiles,
   entryFile,
   plugins = [],
+  dependencies,
   height = '80vh',
   showFileTree,
   fileTreeDefaultOpen,
@@ -35,6 +36,7 @@ export const Playground: React.FC<PlaygroundProps> = ({
       initialFiles={initialFiles}
       entryFile={entryFile}
       plugins={plugins}
+      dependencies={dependencies}
       formValue={formValue}
       onFormValueChange={onFormValueChange}
     >

@@ -4,9 +4,9 @@
 
 ## 预览
 
-![截图](./截屏2025-12-14%2023.08.50.png)
+![截图](./demo.png)
 
-录屏演示：[录屏2025-12-14 23.09.32.mov](./录屏2025-12-14%2023.09.32.mov)
+录屏演示：[demo.mov](./demo.mov)
 
 ## 特性
 
@@ -15,13 +15,14 @@
 - React 预览（默认）与 DOM 预览运行时（供 Vue 插件使用）
 - 插件机制：编译钩子、虚拟文件转换、运行时注入、Monaco 侧扩展
 - 表单模式（不内置表单 UI）：通过 `formValue` 驱动渲染；支持 `// @pg-mapping [...]` 双向映射
-- Vue 插件：`@browser-playground/vue`（基于 `@vue/compiler-sfc` 编译 SFC 并挂载到预览容器）
+- Vue 插件：`@browser-playground/plugin-vue`（基于 `@vue/compiler-sfc` 编译 SFC 并挂载到预览容器）
 
 ## 包结构
 
 - `@browser-playground/core`：Playground 核心（编辑器、文件树、编译与预览）
-- `@browser-playground/plugins`：示例插件（logger、自动注入 React import 等）
-- `@browser-playground/vue`：Vue 运行时插件（默认不启用）
+- `@browser-playground/plugin-controller`：示例插件（logger、自动注入 React import 等）
+- `@browser-playground/plugin-types`：Monaco TypeScript 类型注入插件（React 类型 + 自定义 extra libs）
+- `@browser-playground/plugin-vue`：Vue 运行时插件（默认不启用）
 - `demo`：演示站点（Rspack）
 
 ## 快速开始
@@ -81,7 +82,7 @@ const [formValue, setFormValue] = useState({ info: { name: 'jack' } });
 
 ```tsx
 import { Playground } from '@browser-playground/core';
-import { vuePlugin } from '@browser-playground/vue';
+import { vuePlugin } from '@browser-playground/plugin-vue';
 
 <Playground
   entryFile="/src/App.vue"
@@ -89,6 +90,32 @@ import { vuePlugin } from '@browser-playground/vue';
     '/src/App.vue': `<template><div>Hello Vue</div></template>\n<script>export default {}</script>`
   }}
   plugins={[vuePlugin()] }
+/>;
+```
+
+### Monaco 的 TS 类型（通过插件启用）
+
+Monaco 默认不包含 React/JSX 的类型声明。可以使用 `@browser-playground/plugin-types` 将 `.d.ts` 以 extra lib 的方式注册到 Monaco。
+
+```tsx
+import { typesPlugin } from '@browser-playground/plugin-types';
+
+<Playground plugins={[typesPlugin()]} />;
+```
+
+### 注入三方依赖（由宿主项目提供）
+
+如果宿主项目已经安装了某个包，可以把它通过 `dependencies` 传给 Playground，然后在用户代码里直接 `import` 使用。
+
+```tsx
+import dayjs from 'dayjs';
+
+<Playground
+  dependencies={{ dayjs }}
+  entryFile="/src/App.tsx"
+  initialFiles={{
+    '/src/App.tsx': `import dayjs from 'dayjs';\nexport default function App(){ return <div>{dayjs().format('YYYY-MM-DD')}</div> }`
+  }}
 />;
 ```
 

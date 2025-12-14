@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { compileVirtualFiles } from './compiler';
+import { depIdentifierForPackage } from './dependencies';
 import { applyFormValueToFiles, extractMappedFormValue } from './mapping';
 import type {
   PlaygroundContextValue,
@@ -39,6 +40,7 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
   initialFiles,
   entryFile = '/App.tsx',
   plugins = [],
+  dependencies,
   formValue,
   onFormValueChange,
   children
@@ -79,7 +81,7 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
     let cancelled = false;
     const timeout = window.setTimeout(() => {
       setIsCompiling(true);
-      runCompilation(files, normalizeVfsPath(entryFile), plugins).then(async (result) => {
+      runCompilation(files, normalizeVfsPath(entryFile), plugins, dependencies).then(async (result) => {
         if (cancelled) return;
         setIsCompiling(false);
 
@@ -92,7 +94,7 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
 
         try {
           const runtimeGlobalNames = result.runtimeGlobalNames ?? ['React'];
-          const runtimeGlobals = await resolveRuntimeGlobals(runtimeGlobalNames, plugins, result.runtime ?? 'react');
+          const runtimeGlobals = await resolveRuntimeGlobals(runtimeGlobalNames, plugins, result.runtime ?? 'react', dependencies);
           if (cancelled) return;
           const createModule = new Function(...runtimeGlobalNames, result.code);
           const moduleExport = createModule(...runtimeGlobals);
@@ -125,7 +127,7 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
       cancelled = true;
       window.clearTimeout(timeout);
     };
-  }, [entryFile, files, plugins]);
+  }, [dependencies, entryFile, files, plugins]);
 
   useEffect(() => {
     if (formValue === undefined) return;
@@ -194,8 +196,13 @@ export const usePlayground = () => {
   return ctx;
 };
 
-const runCompilation = async (files: VirtualFileSystem, entryFile: string, plugins: PlaygroundPlugin[]) => {
-  const result = await compileVirtualFiles(files, entryFile, plugins);
+const runCompilation = async (
+  files: VirtualFileSystem,
+  entryFile: string,
+  plugins: PlaygroundPlugin[],
+  dependencies: Record<string, any> | undefined
+) => {
+  const result = await compileVirtualFiles(files, entryFile, plugins, { dependencies: Object.keys(dependencies ?? {}) });
   return result;
 };
 
@@ -218,8 +225,14 @@ const normalizeVfsPath = (path: string) => {
   return ensured.replace(/\/+/g, '/');
 };
 
-const resolveRuntimeGlobals = async (names: string[], plugins: PlaygroundPlugin[], runtime: PlaygroundRuntime) => {
+const resolveRuntimeGlobals = async (
+  names: string[],
+  plugins: PlaygroundPlugin[],
+  runtime: PlaygroundRuntime,
+  dependencies: Record<string, any> | undefined
+) => {
   const globals: Record<string, any> = { React };
+  const depIdToPkg: Record<string, string> = {};
 
   for (const plugin of plugins) {
     if (!plugin.runtimeGlobals) continue;
@@ -227,7 +240,23 @@ const resolveRuntimeGlobals = async (names: string[], plugins: PlaygroundPlugin[
     Object.assign(globals, provided ?? {});
   }
 
-  return names.map((n) => globals[n]);
+  for (const [pkgName, value] of Object.entries(dependencies ?? {})) {
+    const id = depIdentifierForPackage(pkgName);
+    depIdToPkg[id] = pkgName;
+    globals[id] = value;
+  }
+
+  return names.map((n) => {
+    if (globals[n] === undefined) {
+      const pkgName = depIdToPkg[n];
+      throw new Error(
+        pkgName
+          ? `Missing dependency "${pkgName}" (runtime global "${n}"). Pass it via Playground props \`dependencies\` (e.g. \`dependencies={{ "${pkgName}": yourImportedModule }}\`).`
+          : `Missing runtime global "${n}". If you imported a third-party package, pass it via Playground props \`dependencies\`, or provide it via a plugin \`runtimeGlobals\`.`
+      );
+    }
+    return globals[n];
+  });
 };
 
 const mergeFormValue = (base: unknown, overlay: unknown): unknown => {

@@ -43,6 +43,7 @@ export type PlaygroundProps = {
   initialFiles?: VirtualFileSystem;
   entryFile?: string;
   plugins?: PlaygroundPlugin[];
+  dependencies?: Record<string, any>;
   height?: number | string;
   showFileTree?: boolean;
   fileTreeDefaultOpen?: boolean;

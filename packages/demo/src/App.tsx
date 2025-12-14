@@ -1,7 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import { Playground } from '@browser-playground/core';
-import { injectReactImportPlugin, loggerPlugin } from '@browser-playground/plugins';
-import { vuePlugin } from '@browser-playground/vue';
+import { injectReactImportPlugin, loggerPlugin } from '@browser-playground/plugin-controller';
+import { typesPlugin } from '@browser-playground/plugin-types';
+import { vuePlugin } from '@browser-playground/plugin-vue';
+import dayjs from 'dayjs';
+
+const dayjsTypes = `declare module 'dayjs' {
+export type ConfigType = string | number | Date | null | undefined;
+
+export interface Dayjs {
+  format(template?: string): string;
+}
+
+export default function dayjs(date?: ConfigType): Dayjs;
+`;
 
 const heroStyle: React.CSSProperties = {
   display: 'flex',
@@ -12,7 +24,7 @@ const heroStyle: React.CSSProperties = {
 };
 
 const App: React.FC = () => {
-  const [example, setExample] = useState<'react-mapping' | 'react-basic' | 'vue-sfc'>('react-mapping');
+  const [example, setExample] = useState<'react-mapping' | 'react-basic' | 'react-third-party' | 'vue-sfc'>('react-mapping');
   const [mode, setMode] = useState<'code' | 'form'>('form');
   const [formValue, setFormValue] = useState<any>({
     info: { title: 'Browser Playground', name: 'Playground' },
@@ -63,6 +75,13 @@ export const Card: React.FC<CardProps> = ({ name }) => {
     []
   );
 
+  const thirdPartyFiles = useMemo(
+    () => ({
+      '/src/App.tsx': `import dayjs from 'dayjs';\n\nexport default function Preview(){\n  return (\n    <div style={{ padding: 8 }}>\n      <div>Using host-provided dependency: <code>dayjs</code></div>\n      <div style={{ marginTop: 8 }}>{dayjs().format('YYYY-MM-DD HH:mm:ss')}</div>\n    </div>\n  );\n}\n`
+    }),
+    []
+  );
+
   const vueFiles = useMemo(
     () => ({
       '/src/App.vue': `<template>
@@ -95,6 +114,7 @@ export default {
         entryFile: '/src/App.vue',
         initialFiles: vueFiles,
         plugins: [vuePlugin()],
+        dependencies: undefined,
         supportsForm: false,
         pluginBadges: ['vue-runtime']
       } as const;
@@ -106,20 +126,33 @@ export default {
         initialFiles: {
           '/src/App.tsx': `export default function Preview() {\n  return <div style={{ padding: 8 }}>Hello React</div>;\n}\n`
         },
-        plugins: [injectReactImportPlugin(), loggerPlugin()],
+        plugins: [typesPlugin(), injectReactImportPlugin(), loggerPlugin()],
+        dependencies: undefined,
         supportsForm: false,
-        pluginBadges: ['inject-react-import', 'logger']
+        pluginBadges: ['types', 'inject-react-import', 'logger']
+      } as const;
+    }
+
+    if (example === 'react-third-party') {
+      return {
+        entryFile: '/src/App.tsx',
+        initialFiles: thirdPartyFiles,
+        plugins: [typesPlugin({ extraLibs: { 'dayjs/index.d.ts': dayjsTypes } }), injectReactImportPlugin(), loggerPlugin()],
+        dependencies: { dayjs },
+        supportsForm: false,
+        pluginBadges: ['types', 'inject-react-import', 'logger', 'dependencies']
       } as const;
     }
 
     return {
       entryFile: '/src/App.tsx',
       initialFiles: reactFiles,
-      plugins: [injectReactImportPlugin(), loggerPlugin()],
+      plugins: [typesPlugin(), injectReactImportPlugin(), loggerPlugin()],
+      dependencies: undefined,
       supportsForm: true,
-      pluginBadges: ['inject-react-import', 'logger']
+      pluginBadges: ['types', 'inject-react-import', 'logger']
     } as const;
-  }, [example, reactFiles, vueFiles]);
+  }, [example, reactFiles, thirdPartyFiles, vueFiles]);
 
   return (
     <div style={{ padding: 24, maxWidth: 1400, margin: '0 auto' }}>
@@ -153,6 +186,7 @@ export default {
         >
           <option value="react-mapping">React + Form mapping</option>
           <option value="react-basic">React basic</option>
+          <option value="react-third-party">React + third-party deps</option>
           <option value="vue-sfc">Vue SFC</option>
         </select>
 
@@ -182,6 +216,7 @@ export default {
         entryFile={selection.entryFile}
         initialFiles={selection.initialFiles as any}
         plugins={selection.plugins as any}
+        dependencies={selection.dependencies as any}
         height="72vh"
         mode={selection.supportsForm ? mode : 'code'}
         formValue={formValue}

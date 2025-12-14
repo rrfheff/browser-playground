@@ -6,8 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "@browser-playground/core": ["../core/src"],
-      "@browser-playground/plugins": ["../plugins/src"],
-      "@browser-playground/vue": ["../vue/src"]
+      "@browser-playground/plugin-controller": ["../../plugins/plugin-controller/src"],
+      "@browser-playground/plugin-vue": ["../../plugins/plugin-vue/src"]
     }
   },
   "include": ["src"]

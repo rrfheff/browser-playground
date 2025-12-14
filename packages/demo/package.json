@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@browser-playground/core": "workspace:*",
-    "@browser-playground/plugins": "workspace:*",
-    "@browser-playground/vue": "workspace:*",
+    "@browser-playground/plugin-controller": "workspace:*",
+    "@browser-playground/plugin-types": "workspace:*",
+    "@browser-playground/plugin-vue": "workspace:*",
+    "dayjs": "^1.11.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

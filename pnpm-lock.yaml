@@ -66,12 +66,18 @@ importers:
       '@browser-playground/core':
         specifier: workspace:*
         version: link:../core
-      '@browser-playground/plugins':
+      '@browser-playground/plugin-controller':
         specifier: workspace:*
-        version: link:../plugins
-      '@browser-playground/vue':
+        version: link:../../plugins/plugin-controller
+      '@browser-playground/plugin-types':
         specifier: workspace:*
-        version: link:../vue
+        version: link:../../plugins/plugin-types
+      '@browser-playground/plugin-vue':
+        specifier: workspace:*
+        version: link:../../plugins/plugin-vue
+      dayjs:
+        specifier: ^1.11.18
+        version: 1.11.19
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -98,11 +104,11 @@ importers:
         specifier: ^5.2.0
         version: 5.9.3
 
-  packages/plugins:
+  plugins/plugin-controller:
     dependencies:
       '@browser-playground/core':
         specifier: workspace:*
-        version: link:../core
+        version: link:../../packages/core
     devDependencies:
       tsup:
         specifier: ^8.0.1
@@ -111,11 +117,39 @@ importers:
         specifier: ^5.2.0
         version: 5.9.3
 
-  packages/vue:
+  plugins/plugin-types:
     dependencies:
       '@browser-playground/core':
         specifier: workspace:*
-        version: link:../core
+        version: link:../../packages/core
+      '@types/prop-types':
+        specifier: ^15.7.15
+        version: 15.7.15
+      '@types/react':
+        specifier: ^19.2.7
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.7)
+      '@types/scheduler':
+        specifier: ^0.26.0
+        version: 0.26.0
+      csstype:
+        specifier: ^3.1.3
+        version: 3.2.3
+    devDependencies:
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(typescript@5.9.3)
+      typescript:
+        specifier: ^5.2.0
+        version: 5.9.3
+
+  plugins/plugin-vue:
+    dependencies:
+      '@browser-playground/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@vue/compiler-sfc':
         specifier: ^3.5.13
         version: 3.5.25
@@ -1142,6 +1176,10 @@ packages:
       undici-types: 7.16.0
     dev: true
 
+  /@types/prop-types@15.7.15:
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+    dev: false
+
   /@types/qs@6.14.0:
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
     dev: true
@@ -1156,17 +1194,19 @@ packages:
       '@types/react': ^19.2.0
     dependencies:
       '@types/react': 19.2.7
-    dev: true
 
   /@types/react@19.2.7:
     resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
     dependencies:
       csstype: 3.2.3
-    dev: true
 
   /@types/retry@0.12.2:
     resolution: {integrity: sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==}
     dev: true
+
+  /@types/scheduler@0.26.0:
+    resolution: {integrity: sha512-WFHp9YUJQ6CKshqoC37iOlHnQSmxNc795UhB26CyBBttrN9svdIrUjl/NjnNmfcwtncN0h/0PPAFWv9ovP8mLA==}
+    dev: false
 
   /@types/send@0.17.6:
     resolution: {integrity: sha512-Uqt8rPBE8SY0RK8JB1EzVOIZ32uqy8HwdxCnoCOsYrvnswqmFZ/k+9Ikidlk/ImhsdvBsloHbAlewb2IEBV/Og==}
@@ -1744,6 +1784,10 @@ packages:
 
   /csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  /dayjs@1.11.19:
+    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
+    dev: false
 
   /debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}

@@ -19,8 +19,8 @@ export default defineConfig({
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@browser-playground/core': path.resolve(__dirname, '../core/src'),
-      '@browser-playground/plugins': path.resolve(__dirname, '../plugins/src'),
-      '@browser-playground/vue': path.resolve(__dirname, '../vue/src')
+      '@browser-playground/plugin-controller': path.resolve(__dirname, '../../plugins/plugin-controller/src'),
+      '@browser-playground/plugin-vue': path.resolve(__dirname, '../../plugins/plugin-vue/src')
     }
   },
   devtool: 'source-map',
@@ -39,6 +39,10 @@ export default defineConfig({
             }
           }
         ]
+      },
+      {
+        test: /\.d\.ts$/i,
+        type: 'asset/source'
       },
       {
         test: /\.css$/,
