@@ -2,7 +2,7 @@
 
 An in-browser code playground with Monaco editing, a virtual file system, and live preview.
 
-中文文档：`README.zh-CN.md`
+[中文文档](README.zh-CN.md)
 
 ## Features
 
