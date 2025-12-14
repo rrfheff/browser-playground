@@ -4,6 +4,12 @@ An in-browser code playground with Monaco editing, a virtual file system, and li
 
 [中文文档](README.zh-CN.md)
 
+## Preview
+
+![Screenshot](./截屏2025-12-14%2023.08.50.png)
+
+Video demo: [录屏2025-12-14 23.09.32.mov](./录屏2025-12-14%2023.09.32.mov)
+
 ## Features
 
 - Monaco editor (dark theme) + collapsible file explorer
