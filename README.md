@@ -6,9 +6,9 @@ An in-browser code playground with Monaco editing, a virtual file system, and li
 
 ## Preview
 
-![Screenshot](./截屏2025-12-14%2023.08.50.png)
+![Screenshot](./demo.png)
 
-Video demo: [录屏2025-12-14 23.09.32.mov](./录屏2025-12-14%2023.09.32.mov)
+Video demo: [demo.mov](./demo.mov)
 
 ## Features
 
