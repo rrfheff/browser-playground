@@ -1,0 +1,26 @@
+{
+  "name": "demo",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "rspack serve --config rspack.config.ts",
+    "build": "rspack build --config rspack.config.ts",
+    "lint": "echo 'lint not configured for demo'",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@browser-playground/core": "workspace:*",
+    "@browser-playground/plugins": "workspace:*",
+    "@browser-playground/vue": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^1.0.0",
+    "@rspack/core": "^1.0.0",
+    "@rspack/plugin-html": "^0.2.0",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "typescript": "^5.2.0"
+  }
+}

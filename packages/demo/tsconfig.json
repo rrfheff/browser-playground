@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@browser-playground/core": ["../core/src"],
+      "@browser-playground/plugins": ["../plugins/src"],
+      "@browser-playground/vue": ["../vue/src"]
+    }
+  },
+  "include": ["src"]
+}

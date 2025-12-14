@@ -1,0 +1,40 @@
+{
+  "name": "@browser-playground/core",
+  "version": "0.0.1",
+  "description": "Browser-based playground component with Monaco editor and live React preview.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:rrfheff/browser-playground.git",
+    "directory": "packages/core"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --watch",
+    "build:watch": "tsup src/index.tsx --format esm,cjs --dts --watch",
+    "lint": "echo 'lint not configured for core'",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.28.5",
+    "@babel/standalone": "^7.23.0",
+    "@babel/traverse": "^7.28.5",
+    "@babel/types": "^7.28.5",
+    "@monaco-editor/react": "^4.6.0",
+    "@rollup/browser": "^3.29.4",
+    "monaco-editor": "^0.45.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.28.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.2.0"
+  }
+}

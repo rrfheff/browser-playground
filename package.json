@@ -1,0 +1,26 @@
+{
+  "name": "browser-playground",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:rrfheff/browser-playground.git"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "dev": "pnpm --filter demo dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/babel__standalone": "^7.1.9",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3"
+  }
+}
