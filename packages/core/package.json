@@ -1,5 +1,5 @@
 {
-  "name": "@browser-playground/core",
+  "name": "browser-playground-core",
   "version": "0.0.1",
   "description": "Browser-based playground component with Monaco editor and live React preview.",
   "license": "MIT",
